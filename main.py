@@ -6,6 +6,7 @@ from code_reader_model import get_code_response
 from dir_sticher_model import get_dir_response
 from jupyteread import extract_code_cells_from_notebook
 from cloner import clone_repository
+import time
 
 def main():
     parser = argparse.ArgumentParser(description="Clone a GitHub repository and generate README.")
@@ -16,9 +17,10 @@ def main():
     repo_dir = args.repo_name.split('/')[-1]
     os.chdir(rf"D:\venv-test\{repo_dir}")
 
-    ignored_dir = ['.git', '.streamlit']
-    ignored_exts = ['.md', '.pth', '.avi', '.mp4', '.mp3', '.png','.jpg', '.jpeg', '.gif']
-    ignored_files = ['LICENSE']
+    ignored_dir = ['.git', '.streamlit', '.devcontainer']
+    ignored_exts = ['.md', '.pth', '.avi', '.mp4', '.mp3', '.png','.jpg', '.jpeg', '.gif', '.cmd', '.svg', '.webp', '.class', '.lst', 
+                    '.gitignore', '.gitattributes', '.csv']
+    ignored_files = ['LICENSE', 'mnvw']
     dir_responses = {}
 
     for root, dirs, files in os.walk(os.getcwd()):
@@ -47,6 +49,8 @@ def main():
                     print(". .")
                     code_file_responses[file_name] = model_response
                     print(". . .")
+                    time.sleep(2)
+
                     
             except Exception as e:
                 print(f"Error reading {file_path}: {e}")
@@ -62,10 +66,12 @@ def main():
             continue
 
         dir_responses[root] = get_dir_response(dir_prompt)
+        time.sleep(2)
         print("- - -")
 
     readme_prompt = "\n".join([f"{dir_name}: {dir_description}" for dir_name, dir_description in dir_responses.items()])
     readme_content = get_final_response(readme_prompt)
+    time.sleep(2)
 
     print("writing to file")
     with open('test.txt', 'w') as file:
