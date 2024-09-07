@@ -1,0 +1,5 @@
+pandas==2.2.2
+google-generativeai==0.7.0
+protobuf==3.20.3
+python-dotenv==1.0.1
+tqdm==4.66.4
