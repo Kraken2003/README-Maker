@@ -57,7 +57,7 @@ Customize the analysis by excluding specific files and directories. Edit these C
    ```
 
    - **`--local <local_directory_path>`:** Analyze a local project directory (replace `<local_directory_path>` with the actual path).
-   - **`--git <repository_url> --root <optional_clone_directory>`:** Clone a Git repository and analyze it.
+   - **`--git <repository_url> --root <clone_at_local_directory>`:** Clone a Git repository and analyze it.
      - Use `--root` to specify the directory where the repository will be cloned (optional).
    - **`-h`:**  Display help information.
 
