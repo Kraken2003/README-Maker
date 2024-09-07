@@ -5,6 +5,17 @@ import json
 import subprocess 
 
 def extract_code_cells_from_notebook(file_path):
+    """
+    Extracts code cells from a Jupyter notebook file.
+
+    Args:
+        file_path (str): The path to the Jupyter notebook file.
+
+    Returns:
+        str: A string containing the code from all code cells in the notebook, 
+             separated by newline characters. If an error occurs, returns None.
+    """
+    
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             notebook_data = json.load(f)
@@ -22,6 +33,17 @@ def extract_code_cells_from_notebook(file_path):
 
 
 def read_csv_file(file_path):
+    """
+    Reads a CSV file and returns its contents as a list.
+
+    Args:
+        file_path (str): The path to the CSV file.
+
+    Returns:
+        list: A list of values from the first column of the CSV file. 
+              If an error occurs, returns an empty list.
+    """
+
     try:
         df = pd.read_csv(file_path, header=None)
         return df.iloc[:, 0].tolist()
@@ -36,6 +58,17 @@ def read_csv_file(file_path):
     return []
 
 def clone_repository(repo_name, root_dir):
+    """
+    Clones a Git repository to a specified directory.
+
+    Args:
+        repo_name (str): The URL of the Git repository.
+        root_dir (str): The directory where the repository will be cloned.
+
+    Returns:
+        None
+    """
+
     url = f"{repo_name}"
     try:
         subprocess.run(["git", "clone", url], cwd=root_dir, check=True)
@@ -45,6 +78,16 @@ def clone_repository(repo_name, root_dir):
         raise
 
 def read_existing_readme(repo_dir):
+    """
+    Reads the contents of an existing README.md file in a repository directory.
+
+    Args:
+        repo_dir (str): The directory of the repository.
+
+    Returns:
+        str: The contents of the README.md file. If the file does not exist, returns an empty string.
+    """
+
     readme_path = os.path.join(repo_dir, "README.md")
     try:
         with open(readme_path, 'r', encoding='utf-8') as file:
@@ -56,6 +99,17 @@ def read_existing_readme(repo_dir):
     return ""
 
 def check_and_clone_repository(repo_name, root_dir):
+    """
+    Checks if a repository is already cloned, and clones it if not.
+
+    Args:
+        repo_name (str): The URL of the Git repository.
+        root_dir (str): The directory where the repository will be cloned.
+
+    Returns:
+        str: The path to the cloned repository directory.
+
+    """
     repo_dir = repo_name.split('/')[-1]
     target_dir = os.path.join(root_dir, repo_dir)
     
@@ -77,6 +131,19 @@ def check_and_clone_repository(repo_name, root_dir):
             sys.exit(1)
 
 def get_repo_path(args):
+    """
+    Retrieves the path to a repository based on the provided arguments.
+
+    Args:
+        args (object): An object containing the command-line arguments.
+            It should have the following attributes:
+                - git (str): The URL of the Git repository.
+                - root (str): The root directory for cloning Git repositories.
+                - local (str): The path to a local directory.
+
+    Returns:
+        str: The path to the repository directory.
+    """
     if args.git:
         if not args.root:
             print("Please provide a root directory for cloning Git repositories.")

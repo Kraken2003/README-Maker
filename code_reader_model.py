@@ -23,5 +23,15 @@ genai.configure(api_key=api_key)
 model = genai.GenerativeModel('gemini-1.5-flash',system_instruction=sys_prpt)
 
 def get_code_response(prompt):
+    """
+    Generates a detailed description of a code file based on the provided prompt.
+
+    Args:
+        prompt (str): A string representing the code file to be described.
+
+    Returns:
+        str: A detailed description of the code file, including its logic flow, input/output, key components, and dependencies.
+
+    """
     response = model.generate_content(prompt)
     return response.text

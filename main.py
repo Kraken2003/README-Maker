@@ -10,7 +10,7 @@ from code_reader_model import get_code_response
 from dir_sticher_model import get_dir_response
 from utils import read_csv_file, read_existing_readme, get_repo_path, extract_code_cells_from_notebook
 
-def main():
+def main():   
     parser = argparse.ArgumentParser(description="Generate README for a Git repository or local directory.")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--git", help="Git repository URL")
@@ -18,13 +18,14 @@ def main():
     parser.add_argument("--root", help="Root directory for cloning Git repositories")
     args = parser.parse_args()
 
+    # Reading CSV files to get directories, extensions, and files to ignore
     ignored_dir = read_csv_file(r'ignored_dir.csv')
     ignored_exts = read_csv_file(r'ignored_exts.csv')
     ignored_files = read_csv_file(r'ignored_files.csv')
     ignored_files.append('LICENSE')
 
     repo_dir = get_repo_path(args)
-
+    
     user_desc_bool = input("Do you wish to describe what your codebase in brief? (y/n): ")
 
     if user_desc_bool.lower() == 'y':
@@ -51,13 +52,14 @@ def main():
     dir_responses = {}
 
     try:
-        for root, dirs, files in os.walk(os.getcwd()):
+        for root, dirs, files in os.walk(os.getcwd()): # Walking through the repository to gather responses for each file in the directory
             dirs[:] = [d for d in dirs if d not in ignored_dir]
             filtered_files = [f for f in files if f not in ignored_files and not any(f.endswith(ext) for ext in ignored_exts)]
 
             print(f"Scanning directory: {root}")
             code_file_responses = {}
 
+            # Progress bar for reading files
             with tqdm(total=len(filtered_files), desc="Reading files", unit="file") as pbar:
                 for file_name in filtered_files:
                     file_path = os.path.join(root, file_name)
@@ -81,7 +83,7 @@ def main():
                                 model_response = get_code_response(file_name + contents)
                             except Exception as e:
                                 print(f"Error getting code response for {file_name}: {e}")
-                                time.sleep(2)  # Wait for 2 seconds before continuing
+                                time.sleep(2) 
                                 model_response = f"Error processing file: {str(e)}"
                             finally:
                                 spinner.stop()
@@ -91,8 +93,9 @@ def main():
                         code_file_responses[file_name] = f"File could not be read: {str(e)}"
                     
                     pbar.update(1)
-                    time.sleep(0.1)  # Small delay to make progress visible
+                    time.sleep(0.1) 
 
+            # Process directory structure after collecting file responses
             if code_file_responses:
                 spinner = Spinner("Processing directory")
                 spinner.start()
@@ -101,7 +104,7 @@ def main():
                     dir_responses[root] = get_dir_response(dir_prompt)
                 except Exception as e:
                     print(f"Error getting directory response for {root}: {e}")
-                    time.sleep(2)  # Wait for 2 seconds before continuing
+                    time.sleep(2)  
                     dir_responses[root] = f"Error processing directory: {str(e)}"
                 finally:
                     spinner.stop()
@@ -110,9 +113,9 @@ def main():
         print(f"An error occurred while walking through the directory: {e}")
         sys.exit(1)
 
+    # Combine directory responses and create a final prompt for README generation
     readme_prompt = "\n".join([f"{dir_name}: {dir_description}" for dir_name, dir_description in dir_responses.items()])
     
-    # Initial README generation
     spinner = Spinner("Generating initial README")
     spinner.start()
     try:
@@ -120,7 +123,7 @@ def main():
         readme_content = get_final_response(initial_prompt)
     except Exception as e:
         print(f"Error generating initial README: {e}")
-        time.sleep(2)  # Wait for 2 seconds before retrying
+        time.sleep(2) 
         try:
             readme_content = get_final_response(initial_prompt)
         except Exception as e:
@@ -129,10 +132,9 @@ def main():
     finally:
         spinner.stop()
 
-    # Interactive README generation loop
+    # Loop for user feedback and updating the README until satisfied
     iteration = 1
     while True:
-        # Save the generated README to a file
         readme_filename = f"README_v{iteration}.md"
         try:
             with open(readme_filename, 'w', encoding='utf-8') as file:
@@ -151,7 +153,6 @@ def main():
         print("\nPlease provide feedback or suggestions for improvement:")
         user_feedback = input()
         
-        # Update README based on feedback
         spinner = Spinner(f"Updating README (iteration {iteration + 1})")
         spinner.start()
         try:
@@ -159,7 +160,6 @@ def main():
             readme_content = update_with_feedback(feedback_prompt)
         except Exception as e:
             print(f"Error updating README: {e}")
-            time.sleep(2)  # Wait for 2 seconds before retrying
             try:
                 readme_content = update_with_feedback(feedback_prompt)
             except Exception as e:
@@ -168,7 +168,6 @@ def main():
         finally:
             spinner.stop()
 
-        # Delete the previous version
         try:
             os.remove(readme_filename)
         except Exception as e:
@@ -176,7 +175,7 @@ def main():
 
         iteration += 1
 
-    # Rename or overwrite the final version as README.md
+    # Finalizing the README and renaming the last version to "README.md"
     final_readme = f"README_v{iteration}.md"
     try:
         if os.path.exists("README.md"):
@@ -187,8 +186,8 @@ def main():
         print(f"Error saving final README: {e}")
 
     print("README generation complete!")
-
-    # Clean up any remaining version files
+    
+    # Clean up previous README versions
     for i in range(1, iteration):
         version_file = f"README_v{i}.md"
         if os.path.exists(version_file):

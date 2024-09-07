@@ -24,5 +24,15 @@ genai.configure(api_key=api_key)
 model = genai.GenerativeModel('gemini-1.5-flash',system_instruction=sys_prpt)
 
 def get_dir_response(prompt):
+    """
+    Generates a comprehensive summary of a codebase directory using the Gemini 1.5 Flash model.
+
+    Args:
+    prompt (str): The prompt to pass to the model for generating the summary.
+
+    Returns:
+    str: The generated summary of the codebase directory.
+
+    """
     response = model.generate_content(prompt)
     return response.text
