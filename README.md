@@ -27,6 +27,7 @@ Say goodbye to writer's block when creating README files! This command-line tool
 3. **Set your Google API Key:**
    - Create a `.env` file in the root directory of the project.
    - Add your Google API key to the `.env` file:
+
      ```
      GOOGLE_API_KEY="YOUR_API_KEY_HERE" 
      ```
@@ -35,9 +36,9 @@ Say goodbye to writer's block when creating README files! This command-line tool
 
 Customize the analysis by excluding specific files and directories. Edit these CSV files in the project's root directory:
 
-- **ignored_dir.csv:** List directories to ignore (one per line, e.g., "tests/", "docs/").
-- **ignored_exts.csv:** List file extensions to ignore (e.g., ".txt", ".log", ".csv"). 
-- **ignored_files.csv:** List specific file names to ignore (without extensions, e.g., "data", "temp", "utils").
+- **ignored_dir.csv:**  List directories to ignore (e.g., "tests", "docs", "__pycache__").
+- **ignored_exts.csv:**  List file extensions to ignore (e.g., ".txt", ".log", ".csv"). 
+- **ignored_files.csv:**  List specific file names to ignore (without extensions, e.g., "LICENSE", "mnvw").
 
 ## Usage
 
@@ -51,13 +52,13 @@ Customize the analysis by excluding specific files and directories. Edit these C
 
    ```bash
    python main.py --local <local_directory_path>  
-   python main.py --git <repository_url> --root <optional_clone_directory>
+   python main.py --git <repository_url> --root <clone_at_local_directory>
    python main.py -h 
    ```
 
    - **`--local <local_directory_path>`:** Analyze a local project directory (replace `<local_directory_path>` with the actual path).
-   - **`--git <repository_url> --root <optional_clone_directory>`:** Clone a Git repository and analyze it.
-     - Use `--root` to specify the directory where the repository will be cloned (optional).
+   - **`--git <repository_url> --root <clone_directory>`:** Clone a Git repository and analyze it.
+     - Use `--root` to specify the local directory where the repository will be cloned.
    - **`-h`:**  Display help information.
 
 3. **Providing a Project Description:**
