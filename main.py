@@ -1,105 +1,21 @@
 import argparse
 import os
-from redme_model import get_final_response, update_with_feedback
-from code_reader_model import get_code_response
-from dir_sticher_model import get_dir_response
-from jupyteread import extract_code_cells_from_notebook
-from cloner import clone_repository
 import time
 import pandas as pd
 from tqdm import tqdm
 import sys
-import threading
-
-class Spinner:
-    def __init__(self, message="Loading", delay=0.1):
-        self.message = message
-        self.delay = delay
-        self.running = False
-        self.spinner = threading.Thread(target=self._animate)
-
-    def _animate(self):
-        chars = "|/-\\"
-        while self.running:
-            for char in chars:
-                sys.stdout.write(f'\r{self.message} {char}')
-                sys.stdout.flush()
-                time.sleep(self.delay)
-
-    def start(self):
-        self.running = True
-        self.spinner.start()
-
-    def stop(self):
-        self.running = False
-        self.spinner.join()
-        sys.stdout.write('\r' + ' ' * (len(self.message) + 2) + '\r')
-        sys.stdout.flush()
-
-def read_csv_file(file_path):
-    try:
-        df = pd.read_csv(file_path, header=None)
-        return df.iloc[:, 0].tolist()
-    except UnicodeDecodeError as e:
-        print(f"Error decoding the file {file_path}: {e}")
-    except pd.errors.EmptyDataError:
-        print(f"The file {file_path} is empty.")
-    except FileNotFoundError:
-        print(f"The file {file_path} was not found.")
-    except Exception as e:
-        print(f"An unexpected error occurred while reading {file_path}: {e}")
-    return []
-
-def read_existing_readme(repo_dir):
-    readme_path = os.path.join(repo_dir, "README.md")
-    try:
-        with open(readme_path, 'r', encoding='utf-8') as file:
-            return file.read()
-    except FileNotFoundError:
-        print("No existing README.md found.")
-    except Exception as e:
-        print(f"Error reading existing README.md: {e}")
-    return ""
-
-def check_and_clone_repository(repo_name):
-    repo_dir = repo_name.split('/')[-1]
-    target_dir = os.path.join("D:\\venv-test", repo_dir)
-    
-    if os.path.exists(target_dir):
-        print(f"Repository '{repo_name}' is already cloned. Proceeding with existing directory.")
-        return target_dir
-    
-    print(f"Cloning repository '{repo_name}'...")
-    try:
-        clone_repository(repo_name)
-        return target_dir
-    except Exception as e:
-        print(f"Error cloning repository: {e}")
-        retry = input("Do you want to retry? (y/n): ")
-        if retry.lower() == 'y':
-            return check_and_clone_repository(repo_name)
-        else:
-            print("Exiting due to cloning failure.")
-            sys.exit(1)
-
-def get_repo_path(args):
-    if args.git:
-        return check_and_clone_repository(args.git)
-    elif args.local:
-        if os.path.isdir(args.local):
-            return os.path.abspath(args.local)
-        else:
-            print("The provided path is not a valid directory.")
-            exit(1)
-    else:
-        print("Please provide either a Git repository URL or a local directory path.")
-        exit(1)
+from spinner import Spinner
+from redme_model import get_final_response, update_with_feedback
+from code_reader_model import get_code_response
+from dir_sticher_model import get_dir_response
+from utils import read_csv_file, read_existing_readme, get_repo_path, extract_code_cells_from_notebook
 
 def main():
     parser = argparse.ArgumentParser(description="Generate README for a Git repository or local directory.")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--git", help="Git repository URL")
     group.add_argument("--local", help="Path to local directory")
+    parser.add_argument("--root", help="Root directory for cloning Git repositories")
     args = parser.parse_args()
 
     ignored_dir = read_csv_file(r'ignored_dir.csv')
