@@ -1,3 +1,5 @@
 .git
 .devcontainer
 .streamlit
+.vscode
+__pycache__
