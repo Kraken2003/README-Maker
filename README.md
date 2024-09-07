@@ -27,6 +27,7 @@ Say goodbye to writer's block when creating README files! This command-line tool
 3. **Set your Google API Key:**
    - Create a `.env` file in the root directory of the project.
    - Add your Google API key to the `.env` file:
+
      ```
      GOOGLE_API_KEY="YOUR_API_KEY_HERE" 
      ```
