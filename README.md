@@ -56,33 +56,41 @@ Customize the analysis by excluding specific files and directories. Edit these C
    python main.py -h 
    ```
 
-   - **`--local <local_directory_path>`:** Analyze a local project directory (replace `<local_directory_path>` with the actual path).
-	![Local Directory Example](media/local.png)
-   - **`--git <repository_url> --root <clone_directory>`:** Clone a Git repository and analyze it.
-	![Git Clone Example](media/gitclone.png)
-     - Use `--root` to specify the local directory where the repository will be cloned.
+   - **`--local <local_directory_path>`:<br><br>** Analyze a local project directory (replace `<local_directory_path>` with the actual path). <br><br>
+	![Local Directory Example](media/local.png)<br><br>
+   - **`--git <repository_url> --root <clone_directory>`:<br><br>** Clone a Git repository and analyze it.<br><br>
+	![Git Clone Example](media/gitclone.png)<br><br>
+     - Use `--root` to specify the local directory where the repository will be cloned.<br><br>
    - **`-h`:**  Display help information.
 
 3. **Providing a Project Description:**
-   - The tool will prompt you to enter a brief description of your project, which aids in generating a contextually relevant README.
-	![E2E Interaction Video](media/e2e.mp4)
+   - The tool will prompt you to enter a brief description of your project, which aids in generating a contextually relevant README.<br>
+	
+
+https://github.com/user-attachments/assets/63425a48-2fca-479d-beab-8393a9332175
+
+
 
 4. **Review and Feedback:**
-   -  The generated README.md will be saved as for example READMEv1.md in your root directory. Review the content and request revisions if needed. 
-	![Iterative Changes Video](media/itred.mp4)
+   -  The generated README.md will be saved as for example READMEv1.md in your root directory. Review the content and request revisions if needed. <br>
+	
+
+https://github.com/user-attachments/assets/7debb8ce-5b47-42b0-b2d6-82bc3709c47d
+
+
 
 5. **README Generation:**
    - The final README.md file will be created in the root directory of the project, overwriting any existing README.md file.
 
-### Results
+## Results
 
 Here’s a comparison showing the README before and after using the README-Maker tool:
 
-**Before:**
-![Before Using README-Maker](media/before.png)
+### Before:<br><br>
+![Before Using README-Maker](media/before.png)<br>
 
-**After:**
-![After Using README-Maker](media/after.png)
+### After:<br><br>
+![After Using README-Maker](media/after.png)<br>
 
 
 ## How it Works
