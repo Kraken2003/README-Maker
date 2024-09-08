@@ -8,7 +8,7 @@ from spinner import Spinner
 from redme_model import get_final_response, update_with_feedback
 from code_reader_model import get_code_response
 from dir_sticher_model import get_dir_response
-from utils import read_csv_file, read_existing_readme, get_repo_path, extract_code_cells_from_notebook
+from utils import read_csv_file, read_existing_readme, get_repo_path, extract_code_cells_from_notebook, read_file_with_fallback
 
 def main():   
     parser = argparse.ArgumentParser(description="Generate README for a Git repository or local directory.")
@@ -73,8 +73,9 @@ def main():
                             contents = df.to_string(index=False)
 
                         else:
-                            with open(file_path, 'r', encoding='utf-8') as file:
-                                contents = file.read()
+                            contents = read_file_with_fallback(file_path)
+                            #with open(file_path, 'r', encoding='utf-8') as file:
+                                #contents = file.read()
                         
                         if contents:    
                             spinner = Spinner(f"Processing {file_name}")

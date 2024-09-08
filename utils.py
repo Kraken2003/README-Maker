@@ -3,6 +3,23 @@ import os
 import sys
 import json
 import subprocess 
+import chardet
+
+def read_file_with_fallback(file_path):
+    with open(file_path, 'rb') as file:
+        raw = file.read(10000) 
+        detected = chardet.detect(raw)
+        encoding = detected['encoding']
+
+    encodings = [encoding, 'utf-8', 'latin-1', 'ascii'] if encoding else ['utf-8', 'latin-1', 'ascii']
+    
+    for enc in encodings:
+        try:
+            with open(file_path, 'r', encoding=enc) as file:
+                return file.read()
+        except UnicodeDecodeError:
+            continue
+    return f"Unable to read {file_path} with any of the attempted encodings"
 
 def extract_code_cells_from_notebook(file_path):
     """
