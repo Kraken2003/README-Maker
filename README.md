@@ -57,18 +57,33 @@ Customize the analysis by excluding specific files and directories. Edit these C
    ```
 
    - **`--local <local_directory_path>`:** Analyze a local project directory (replace `<local_directory_path>` with the actual path).
+	![Local Directory Example](media/local.png)
    - **`--git <repository_url> --root <clone_directory>`:** Clone a Git repository and analyze it.
+	![Git Clone Example](media/gitclone.png)
      - Use `--root` to specify the local directory where the repository will be cloned.
    - **`-h`:**  Display help information.
 
 3. **Providing a Project Description:**
    - The tool will prompt you to enter a brief description of your project, which aids in generating a contextually relevant README.
+	![E2E Interaction Video](media/e2e.mp4)
 
 4. **Review and Feedback:**
    -  The generated README.md will be saved as for example READMEv1.md in your root directory. Review the content and request revisions if needed. 
+	![Iterative Changes Video](media/itred.mp4)
 
 5. **README Generation:**
    - The final README.md file will be created in the root directory of the project, overwriting any existing README.md file.
+
+### Results
+
+Here’s a comparison showing the README before and after using the README-Maker tool:
+
+**Before:**
+![Before Using README-Maker](media/before.png)
+
+**After:**
+![After Using README-Maker](media/after.png)
+
 
 ## How it Works
 
