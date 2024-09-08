@@ -65,7 +65,7 @@ Customize the analysis by excluding specific files and directories. Edit these C
    - The tool will prompt you to enter a brief description of your project, which aids in generating a contextually relevant README.
 
 4. **Review and Feedback:**
-   -  The generated README.md will be displayed in your terminal. Review the content and request revisions if needed. 
+   -  The generated README.md will be saved as for example READMEv1.md in your root directory. Review the content and request revisions if needed. 
 
 5. **README Generation:**
    - The final README.md file will be created in the root directory of the project, overwriting any existing README.md file.
